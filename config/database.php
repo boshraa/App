@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => 'pgsql',
 
     /*
     |--------------------------------------------------------------------------
@@ -32,6 +32,13 @@ return [
     | choice installed on your machine before you begin development.
     |
     */
+    $url = parse_url(getenv("DATABASE_URL"));
+
+$host = $url["host"];
+$username = $url["user"];
+$password = $url["pass"];
+$database = substr($url["path"], 1);
+
 
     'connections' => [
 
@@ -63,20 +70,16 @@ return [
             ]) : [],
         ],
 
-        'pgsql' => [
-            'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => isset($DATABASE_URL['host']) ? $DATABASE_URL['host'] : null,
-            'port' =>  isset($DATABASE_URL['port']) ? $DATABASE_URL['port'] : null,
-            'database' => isset($DATABASE_URL['path']) ? ltrim($DATABASE_URL['path'],"/") :null,
-            'username' => isset($DATABASE_URL['user']) ? $DATABASE_URL['user'] : null,
-            'password' => isset($DATABASE_URL['pass']) ? $DATABASE_URL['pass'] : null,
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'schema' => 'public',
-            'sslmode' => 'prefer',
-        ],
+       'pgsql' => array(
+        'driver'   => 'pgsql',
+        'host'     => $host,
+        'database' => $database,
+        'username' => $username,
+        'password' => $password,
+        'charset'  => 'utf8',
+        'prefix'   => '',
+        'schema'   => 'public',
+    ),
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
